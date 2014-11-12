@@ -271,7 +271,7 @@ def main():
 
     parser.add_option('--output', dest='output', default='simple',
                       metavar='FORMAT',
-                      help='Output print format [simple, json, xml, yaml]')
+                      help='Output format [simple, json, xml, yaml]')
 
     options, args = parser.parse_args()
     if not args:

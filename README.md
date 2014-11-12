@@ -19,7 +19,7 @@ It supports local Git, Mercurial, and Subversion repositories.
 	--since=DATE          Show commits more recent than a specific date
 	--branch=NAME         Branch name (all branches by default)
 	--sortby=NAME         Sort by [streaks, commits] (streaks is default)
-	--output=FORMAT       Output print format [simple, json, xml, yaml]
+	--output=FORMAT       Output format [simple, json, xml, yaml]
 
 Author
 ------
