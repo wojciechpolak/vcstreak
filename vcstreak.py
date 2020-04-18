@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# vcstreak.py -- Copyright (C) 2014 Wojciech Polak.
+# vcstreak.py -- Copyright (C) 2014, 2020 Wojciech Polak
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -121,11 +121,19 @@ def calculate(options=None, args=None):
         if 'author_email' not in entry:
             continue
         author_id = entry[id_author_strategy]
+
+        ### Normalize IDs
+        author_id = author_id.lower()  # normalize IDs
+        if options.normalize_ids:
+            for norm in options.normalize_ids.split(','):
+                source, target = norm.split(':')
+                author_id = author_id.replace(source, target)
+
         if author_id not in data:
             data[author_id] = {
                 'info': {
-                    'author_name': entry['author_name'],
-                    'author_email': entry['author_email'],
+                    'author_name': author_id if id_author_strategy == 'author_name' else entry['author_name'],
+                    'author_email': author_id if id_author_strategy == 'author_email' else entry['author_email'],
                 },
                 'streaks': {},
                 'commits': [],
@@ -268,6 +276,10 @@ def main():
     parser.add_option('--sortby', dest='sortby', default='streaks',
                       metavar='NAME',
                       help='Sort by [streaks, commits] (streaks is default)')
+
+    parser.add_option('--normalize-ids', dest='normalize_ids', default='',
+                      metavar='FORMAT',
+                      help='Normalize IDs (e.g. emails): s1:t1,s2:t2,...')
 
     parser.add_option('--output', dest='output', default='simple',
                       metavar='FORMAT',
