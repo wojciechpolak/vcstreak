@@ -277,6 +277,10 @@ def main():
                       metavar='NAME',
                       help='Sort by [streaks, commits] (streaks is default)')
 
+    parser.add_option('--show', dest='show', default='all',
+                      metavar='NAME',
+                      help='Show data [all, streaks, commits] (all is default)')
+
     parser.add_option('--normalize-ids', dest='normalize_ids', default='',
                       metavar='FORMAT',
                       help='Normalize IDs (e.g. emails): s1:t1,s2:t2,...')
@@ -319,19 +323,25 @@ def main():
                     author_str = '%s <%s>' % (info['author_name'],
                                               info['author_email'])
 
-            print('%5d) %s (%d commits)' %
-                  (info['place'],
-                   author_str.encode('utf-8', 'ignore').decode('utf-8'),
-                   info['commits']))
+            if options.show == 'all' or options.show == 'commits':
+                print('%5d) %s (%d commits)' %
+                      (info['place'],
+                       author_str.encode('utf-8', 'ignore').decode('utf-8'),
+                       info['commits']))
+            elif options.show == 'streaks':
+                print('%5d) %s' %
+                      (info['place'],
+                       author_str.encode('utf-8', 'ignore').decode('utf-8')))
 
-            for streak in entry['streaks']:
-                print('\t%4d %s: %s - %s (%s..%s)' %
-                      (streak['count'],
-                       'days' if streak['count'] > 1 else 'day ',
-                       streak['date_start'],
-                       streak['date_end'],
-                       streak['id_start'][:10],
-                       streak['id_end'][:10]))
+            if options.show == 'all' or options.show == 'streaks':
+                for streak in entry['streaks']:
+                    print('\t%4d %s: %s - %s (%s..%s)' %
+                          (streak['count'],
+                           'days' if streak['count'] > 1 else 'day ',
+                           streak['date_start'],
+                           streak['date_end'],
+                           streak['id_start'][:10],
+                           streak['id_end'][:10]))
         if len(data):
             print(data[0]['info']['timestamp'])
 
